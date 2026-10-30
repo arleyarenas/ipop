@@ -14,9 +14,9 @@ export const perfil = {
   // ✏️ Frase corta que aparece bajo tu nombre en la portada
   lema: "Construeixo, configuro i documento infraestructura. De la cuina al servidor: mateixa organització, un altre tipus de servei.",
   // ✏️ Rellena tus enlaces reales (deja '' si aún no tienes alguno)
-  email: 'el-teu-correu@exemple.com',
+  email: 'arley.arenas.saavedra@gmail.com',
   linkedin: 'https://www.linkedin.com/in/TU_LINKEDIN',
-  github: 'https://github.com/TU_USUARIO',
+  github: 'https://github.com/arleyarenas',
   telegram: '',
   // Pon tu CV en la carpeta /public con este nombre
   cvPdf: 'cv-arley-arenas.pdf',
@@ -59,16 +59,16 @@ export const competenciesTecniques = [
     items: [
       { nom: 'Linux (Ubuntu Server)', nivell: 4 },
       { nom: 'Windows Server', nivell: 3 },
-      { nom: 'Bash scripting', nivell: 3 },
+      { nom: 'Bash scripting', nivell: 2 },
     ],
   },
   {
     area: 'Xarxes',
     icona: '🌐',
     items: [
-      { nom: 'TCP/IP, DNS, DHCP', nivell: 4 },
-      { nom: 'Configuració de routers i switches', nivell: 3 },
-      { nom: 'SSH i accés remot', nivell: 4 },
+      { nom: 'TCP/IP, DNS, DHCP', nivell: 3 },
+      { nom: 'Configuració de routers i switches', nivell: 2 },
+      { nom: 'SSH i accés remot', nivell: 3 },
     ],
   },
   {
@@ -77,7 +77,7 @@ export const competenciesTecniques = [
     items: [
       { nom: 'Servidors web (Apache / Nginx)', nivell: 3 },
       { nom: 'Virtualització (VirtualBox / Proxmox)', nivell: 3 },
-      { nom: 'Monitorització amb Zabbix', nivell: 2 },
+      { nom: 'Monitorització amb Zabbix', nivell: 1 },
     ],
   },
   {
@@ -86,7 +86,7 @@ export const competenciesTecniques = [
     items: [
       { nom: 'PHP', nivell: 3 },
       { nom: 'Python', nivell: 3 },
-      { nom: 'SQL (MySQL)', nivell: 3 },
+      { nom: 'SQL (MySQL)', nivell: 1 },
     ],
   },
 ];
