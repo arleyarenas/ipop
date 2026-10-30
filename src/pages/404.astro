@@ -1,0 +1,21 @@
+---
+import Layout from '../layouts/Layout.astro';
+const base = import.meta.env.BASE_URL.replace(/\/$/, '');
+---
+
+<Layout title="Pàgina no trobada">
+  <section class="section">
+    <div class="container nf">
+      <p class="mono code">HTTP/1.1 404 Not Found</p>
+      <h1><span class="gradient-text">404</span></h1>
+      <p>Aquesta pàgina no existeix… encara.</p>
+      <a href={`${base}/`} class="btn btn-primary">Tornar a l'inici</a>
+    </div>
+  </section>
+</Layout>
+
+<style>
+  .nf { text-align: center; padding: 60px 0; }
+  .code { color: var(--accent-2); }
+  h1 { font-size: clamp(5rem, 18vw, 9rem); margin: 0; }
+</style>

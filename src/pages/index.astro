@@ -1,0 +1,129 @@
+---
+import Layout from '../layouts/Layout.astro';
+import SectionTitle from '../components/SectionTitle.astro';
+import Orb from '../components/Orb.astro';
+import GlyphNav from '../components/GlyphNav.astro';
+import { perfil, inici } from '../data/perfil.js';
+
+const base = import.meta.env.BASE_URL.replace(/\/$/, '');
+
+const seccions = [
+  { num: '02', href: '/curriculum', titol: 'Currículum per competències', desc: 'Competències tècniques i transversals, què em fa singular i el meu pla de comunicació.', icona: '🧠' },
+  { num: '03', href: '/especialitzacio', titol: "Àmbit d'especialització", desc: 'El rol professional on vull créixer, les tasques que comporta i les empreses objectiu.', icona: '🎯' },
+  { num: '04', href: '/pla-formacio', titol: 'Pla de formació i projecte', desc: 'Full de ruta, certificacions i el meu projecte ReBoot.', icona: '🗺️' },
+  { num: '05', href: '/contacte', titol: 'Contacte', desc: 'Com connectar amb mi: correu, LinkedIn, GitHub i CV descarregable.', icona: '✉️' },
+];
+---
+
+<Layout title="Inici">
+  <!-- HERO -->
+  <section class="hero">
+    <div class="container hero-grid">
+      <div class="hero-text">
+        {perfil.disponible && (
+          <p class="status mono"><span class="dot"></span> Obert a pràctiques i primera feina</p>
+        )}
+        <h1>
+          Hola, sóc<br />
+          <span class="gradient-text">{perfil.nom}</span>
+        </h1>
+        <p class="role mono">{perfil.rol} · {perfil.cicle}</p>
+        <p class="lema">{perfil.lema}</p>
+        <div class="btn-row">
+          <a href={`${base}/curriculum`} class="btn btn-primary">Veure el meu perfil →</a>
+          <a href={`${base}/${perfil.cvPdf}`} class="btn btn-ghost" download>Descarregar CV</a>
+        </div>
+      </div>
+
+      <!-- Orbe interactivo (datos en perfil.js → orbita) -->
+      <div class="hero-orb">
+        <Orb />
+      </div>
+    </div>
+  </section>
+
+  <!-- PRESENTACIÓ -->
+  <section class="section">
+    <div class="container about">
+      <div class="reveal">
+        <SectionTitle title="Qui sóc i per què aquest espai" />
+        {inici.presentacio.map((p) => <p class="big">{p}</p>)}
+      </div>
+      <div class="stats reveal">
+        {inici.xifres.map((x) => (
+          <div class="stat card">
+            <span class="stat-n gradient-text">{x.valor}</span>
+            <span class="stat-l">{x.etiqueta}</span>
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- ÍNDEX DE L'IPOP -->
+  <section class="section">
+    <div class="container">
+      <SectionTitle title="El meu IPOP" sub="Informe Personal d'Orientació Professional. Tria un apartat per veure de què tracta:" />
+      <div class="reveal">
+        <GlyphNav items={seccions} />
+      </div>
+    </div>
+  </section>
+</Layout>
+
+<style>
+  .hero { padding: 90px 0 60px; }
+  .hero-grid {
+    display: grid;
+    grid-template-columns: 1.15fr 1fr;
+    gap: 56px;
+    align-items: center;
+  }
+  .status {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 0.82rem;
+    color: var(--green);
+    padding: 6px 14px;
+    border-radius: var(--radius-sm);
+    border: 1px solid rgba(var(--green-rgb), 0.35);
+    background: rgba(var(--green-rgb), 0.08);
+    margin-bottom: 24px;
+  }
+  .dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: var(--green);
+    box-shadow: 0 0 0 0 rgba(var(--green-rgb), 0.7);
+    animation: pulse 2s infinite;
+  }
+  @keyframes pulse {
+    70% { box-shadow: 0 0 0 10px rgba(var(--green-rgb), 0); }
+    100% { box-shadow: 0 0 0 0 rgba(var(--green-rgb), 0); }
+  }
+  .hero h1 { margin-bottom: 16px; }
+  .role { color: var(--accent-2); font-size: 0.95rem; margin-bottom: 18px; }
+  .lema { font-size: 1.15rem; max-width: 48ch; margin-bottom: 32px; }
+
+  .hero-orb { display: grid; place-items: center; }
+
+  /* Sobre mí */
+  .about {
+    display: grid;
+    grid-template-columns: 1.5fr 1fr;
+    gap: 48px;
+    align-items: center;
+  }
+  .big { font-size: 1.08rem; }
+  .stats { display: grid; gap: 14px; }
+  .stat { display: flex; align-items: center; gap: 18px; padding: 20px 24px; }
+  .stat-n { font-family: var(--font-display); font-size: 2.4rem; font-weight: 700; min-width: 48px; }
+  .stat-l { color: var(--text-dim); font-weight: 500; }
+
+  @media (max-width: 900px) {
+    .hero-grid, .about { grid-template-columns: 1fr; gap: 40px; }
+    .hero { padding: 56px 0 32px; }
+  }
+</style>

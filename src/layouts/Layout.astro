@@ -1,0 +1,221 @@
+---
+// Plantilla común: todas las páginas se envuelven con este layout.
+import '../styles/global.css';
+import Nav from '../components/Nav.astro';
+import Footer from '../components/Footer.astro';
+import { perfil } from '../data/perfil.js';
+
+interface Props {
+  title: string;
+  description?: string;
+}
+const { title, description = `IPOP i portfoli professional de ${perfil.nom}, estudiant de ${perfil.cicle}.` } = Astro.props;
+const base = import.meta.env.BASE_URL.replace(/\/$/, '');
+const fullTitle = title === 'Inici' ? `${perfil.nom} · IPOP` : `${title} · ${perfil.nom}`;
+---
+
+<!doctype html>
+<html lang="ca">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{fullTitle}</title>
+    <meta name="description" content={description} />
+    <meta property="og:title" content={fullTitle} />
+    <meta property="og:description" content={description} />
+    <meta name="theme-color" content="#06080a" />
+    <link rel="icon" type="image/svg+xml" href={`${base}/favicon.svg`} />
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@500;600;700&family=Inter:wght@400;500;600&family=Share+Tech+Mono&display=swap"
+      rel="stylesheet"
+    />
+  </head>
+  <body>
+    <!-- 🌧️ Atmósfera de fondo: cielo, ruinas, lluvia, niebla y relámpagos -->
+    <div class="atmos" aria-hidden="true">
+      <div class="sky"></div>
+      <svg class="ruins" viewBox="0 0 1440 420" preserveAspectRatio="xMidYMax slice">
+        <!-- Capa lejana -->
+        <g class="far">
+          <rect x="40" y="170" width="70" height="250" />
+          <rect x="62" y="120" width="14" height="60" />
+          <rect x="150" y="230" width="120" height="190" />
+          <rect x="300" y="90" width="46" height="330" />
+          <rect x="296" y="80" width="54" height="14" />
+          <rect x="380" y="200" width="160" height="220" />
+          <rect x="420" y="160" width="10" height="44" />
+          <rect x="580" y="140" width="64" height="280" />
+          <rect x="606" y="60" width="4" height="84" />
+          <rect x="690" y="250" width="200" height="170" />
+          <rect x="920" y="110" width="58" height="310" />
+          <rect x="1010" y="210" width="140" height="210" />
+          <rect x="1180" y="150" width="80" height="270" />
+          <rect x="1214" y="100" width="12" height="54" />
+          <rect x="1290" y="240" width="150" height="180" />
+          <rect x="0" y="300" width="1440" height="120" />
+        </g>
+        <!-- Luces que parpadean -->
+        <rect class="lamp" x="312" y="130" width="4" height="4" />
+        <rect class="lamp" x="606" y="56" width="4" height="4" />
+        <rect class="lamp" x="944" y="160" width="4" height="4" />
+        <rect class="lamp" x="1060" y="250" width="4" height="4" />
+        <rect class="lamp" x="1218" y="96" width="4" height="4" />
+        <rect class="lamp" x="470" y="240" width="4" height="4" />
+        <!-- Capa cercana: estructuras, tuberías y una pasarela rota -->
+        <g class="near">
+          <rect x="0" y="260" width="90" height="160" />
+          <rect x="90" y="300" width="160" height="22" />
+          <rect x="120" y="322" width="10" height="98" />
+          <rect x="210" y="322" width="10" height="98" />
+          <rect x="250" y="210" width="80" height="210" />
+          <rect x="270" y="150" width="18" height="64" />
+          <rect x="330" y="330" width="260" height="90" />
+          <rect x="360" y="286" width="300" height="12" />
+          <rect x="560" y="240" width="60" height="180" />
+          <rect x="620" y="350" width="240" height="70" />
+          <rect x="760" y="230" width="22" height="190" />
+          <rect x="740" y="224" width="62" height="10" />
+          <rect x="860" y="280" width="130" height="140" />
+          <rect x="990" y="320" width="200" height="16" />
+          <rect x="1040" y="336" width="8" height="84" />
+          <rect x="1150" y="336" width="8" height="84" />
+          <rect x="1190" y="200" width="70" height="220" />
+          <rect x="1206" y="130" width="14" height="74" />
+          <rect x="1260" y="300" width="180" height="120" />
+          <rect x="1340" y="250" width="40" height="54" />
+          <rect x="0" y="390" width="1440" height="30" />
+        </g>
+      </svg>
+      <canvas id="rain"></canvas>
+      <div class="fog"></div>
+      <div class="flash"></div>
+    </div>
+    <div class="cycle" aria-hidden="true"></div>
+
+    <Nav />
+    <main>
+      <slot />
+    </main>
+    <Footer />
+
+    <!-- Animación suave al hacer scroll -->
+    <script is:inline>
+      (() => {
+        const els = document.querySelectorAll('.reveal');
+        if (!('IntersectionObserver' in window)) {
+          els.forEach((el) => el.classList.add('visible'));
+          return;
+        }
+        const io = new IntersectionObserver(
+          (entries) => {
+            entries.forEach((e) => {
+              if (e.isIntersecting) {
+                e.target.classList.add('visible');
+                io.unobserve(e.target);
+              }
+            });
+          },
+          { threshold: 0.12 }
+        );
+        els.forEach((el) => io.observe(el));
+      })();
+    </script>
+
+    <!-- 🌧️ Lluvia, relámpagos y barra de progreso -->
+    <script is:inline>
+      (() => {
+        const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+        // Barra de progreso de scroll
+        const bar = document.querySelector('.cycle');
+        const onScroll = () => {
+          const h = document.documentElement.scrollHeight - innerHeight;
+          bar.style.width = (h > 0 ? (scrollY / h) * 100 : 0) + '%';
+        };
+        addEventListener('scroll', onScroll, { passive: true });
+        onScroll();
+
+        // Lluvia
+        const canvas = document.getElementById('rain');
+        const ctx = canvas.getContext('2d');
+        let w, h, drops = [];
+        const WIND = 0.18; // inclinación de la lluvia
+
+        const resize = () => {
+          const dpr = Math.min(devicePixelRatio || 1, 2);
+          w = innerWidth;
+          h = innerHeight;
+          canvas.width = w * dpr;
+          canvas.height = h * dpr;
+          ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+          const count = Math.round(Math.min(w, 1600) / 5); // densidad
+          drops = Array.from({ length: count }, () => newDrop(true));
+        };
+
+        const newDrop = (anywhere) => {
+          const z = Math.random(); // profundidad: 0 lejos, 1 cerca
+          return {
+            x: Math.random() * (w + 200) - 100,
+            y: anywhere ? Math.random() * h : -20 - Math.random() * 100,
+            len: 8 + z * 18,
+            speed: 7 + z * 11,
+            alpha: 0.08 + z * 0.22,
+            width: 0.6 + z * 0.8,
+          };
+        };
+
+        const draw = () => {
+          ctx.clearRect(0, 0, w, h);
+          ctx.lineCap = 'round';
+          for (const d of drops) {
+            ctx.strokeStyle = `rgba(175, 205, 210, ${d.alpha})`;
+            ctx.lineWidth = d.width;
+            ctx.beginPath();
+            ctx.moveTo(d.x, d.y);
+            ctx.lineTo(d.x - d.len * WIND, d.y + d.len);
+            ctx.stroke();
+          }
+        };
+
+        const step = () => {
+          for (let i = 0; i < drops.length; i++) {
+            const d = drops[i];
+            d.y += d.speed;
+            d.x -= d.speed * WIND;
+            if (d.y > h + 20) drops[i] = newDrop(false);
+          }
+          draw();
+          if (running) requestAnimationFrame(step);
+        };
+
+        let running = !reduce;
+        resize();
+        addEventListener('resize', resize);
+        if (reduce) {
+          draw(); // lluvia quieta, sin movimiento
+        } else {
+          requestAnimationFrame(step);
+          document.addEventListener('visibilitychange', () => {
+            running = !document.hidden;
+            if (running) requestAnimationFrame(step);
+          });
+        }
+
+        // Relámpagos ocasionales
+        if (!reduce) {
+          const flash = document.querySelector('.flash');
+          const strike = () => {
+            flash.classList.remove('on');
+            void flash.offsetWidth;
+            flash.classList.add('on');
+            setTimeout(strike, 12000 + Math.random() * 18000);
+          };
+          setTimeout(strike, 6000 + Math.random() * 6000);
+        }
+      })();
+    </script>
+  </body>
+</html>

@@ -1,0 +1,26 @@
+---
+interface Props {
+  title: string;
+  sub?: string;
+}
+const { title, sub } = Astro.props;
+---
+
+<div class="section-title reveal">
+  <h2>{title}</h2>
+  {sub && <p>{sub}</p>}
+</div>
+
+<style>
+  .section-title { margin-bottom: 32px; max-width: 64ch; }
+  h2 { display: flex; align-items: center; gap: 14px; }
+  h2::before {
+    content: '';
+    width: 28px;
+    height: 3px;
+    border-radius: 3px;
+    background: var(--grad);
+    flex-shrink: 0;
+  }
+  p { margin: 0; }
+</style>

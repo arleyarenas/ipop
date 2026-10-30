@@ -1,0 +1,136 @@
+---
+import Layout from '../layouts/Layout.astro';
+import PageHeader from '../components/PageHeader.astro';
+import SectionTitle from '../components/SectionTitle.astro';
+import { especialitzacio as e } from '../data/perfil.js';
+---
+
+<Layout title="Àmbit d'especialització">
+  <PageHeader
+    num="03"
+    kicker="Àmbit d'especialització"
+    title={`On vull <span class="gradient-text">créixer</span>`}
+    intro={e.intro}
+  />
+
+  <!-- Rol escollit -->
+  <section class="section">
+    <div class="container">
+      <div class="role-card reveal">
+        <div>
+          <p class="mono label">rol objectiu</p>
+          <h2>{e.rol}</h2>
+          <p class="sub">{e.subtitol}</p>
+        </div>
+        <div class="role-icon" aria-hidden="true">🐧</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Tasques i ocupacions -->
+  <section class="section">
+    <div class="container grid grid-2 cols">
+      <div class="reveal">
+        <SectionTitle title="Tasques i competències" sub="Què fa un professional en aquest rol." />
+        <ul class="checks">
+          {e.tasques.map((t) => <li>{t}</li>)}
+        </ul>
+      </div>
+      <div class="reveal">
+        <SectionTitle title="Ocupacions concretes" sub="Llocs de treball als quals em puc presentar." />
+        <div class="jobs">
+          {e.ocupacions.map((o, i) => (
+            <div class="job">
+              <span class="mono">0{i + 1}</span>
+              <span>{o}</span>
+            </div>
+          ))}
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Empreses objectiu -->
+  <section class="section">
+    <div class="container">
+      <SectionTitle title="Empreses objectiu" sub="Característiques de les empreses que ofereixen aquests llocs de treball." />
+      <div class="grid grid-4">
+        {e.empreses.map((m) => (
+          <div class="card lift reveal">
+            <span class="icon">{m.icona}</span>
+            <h3>{m.tipus}</h3>
+            <p>{m.desc}</p>
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+</Layout>
+
+<style>
+  .role-card {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 24px;
+    padding: 44px;
+    border-radius: var(--radius-lg);
+    border: 1px solid rgba(var(--accent-rgb), 0.35);
+    background:
+      radial-gradient(70% 120% at 100% 50%, rgba(var(--accent-2-rgb), 0.14), transparent 60%),
+      radial-gradient(60% 120% at 0% 0%, rgba(var(--accent-rgb), 0.2), transparent 60%),
+      var(--bg-2);
+  }
+  .label { color: var(--accent-2); font-size: 0.82rem; text-transform: uppercase; letter-spacing: 0.08em; }
+  .role-card h2 { font-size: clamp(1.9rem, 4.5vw, 3rem); margin-bottom: 6px; }
+  .sub { font-size: 1.1rem; margin: 0; }
+  .role-icon {
+    font-size: 4.5rem;
+    width: 130px;
+    height: 130px;
+    flex-shrink: 0;
+    display: grid;
+    place-items: center;
+    border-radius: var(--radius-lg);
+    background: rgba(255, 255, 255, 0.04);
+    border: 1px solid var(--border-strong);
+  }
+
+  .cols { gap: 48px; }
+  .checks { list-style: none; margin: 0; padding: 0; display: grid; gap: 12px; }
+  .checks li {
+    display: flex;
+    gap: 12px;
+    align-items: flex-start;
+    padding: 14px 18px;
+    border-radius: var(--radius-sm);
+    background: var(--surface);
+    border: 1px solid var(--border);
+    color: var(--text);
+  }
+  .checks li::before {
+    content: '✓';
+    color: var(--green);
+    font-weight: 700;
+    flex-shrink: 0;
+  }
+  .jobs { display: grid; gap: 12px; }
+  .job {
+    display: flex;
+    gap: 16px;
+    align-items: center;
+    padding: 18px 20px;
+    border-radius: var(--radius-sm);
+    border: 1px solid var(--border);
+    background: var(--surface);
+    font-weight: 500;
+    transition: border-color 0.2s, transform 0.2s;
+  }
+  .job:hover { border-color: var(--accent); transform: translateX(4px); }
+  .job .mono { color: var(--accent); font-size: 0.8rem; }
+
+  @media (max-width: 640px) {
+    .role-card { padding: 28px 22px; flex-direction: column-reverse; align-items: flex-start; }
+    .role-icon { width: 84px; height: 84px; font-size: 3rem; border-radius: var(--radius); }
+  }
+</style>

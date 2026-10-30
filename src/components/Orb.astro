@@ -1,0 +1,251 @@
+---
+// ◎ ORBE DE ANILLOS
+// Clica un nodo: el anillo gira hasta ponerlo arriba y el núcleo
+// central muestra su contenido. Los datos están en perfil.js → orbita.
+import { orbita } from '../data/perfil.js';
+
+const n = orbita.length;
+const primer = orbita[0];
+---
+
+<div class="orb" data-orb>
+  <div class="o-stage">
+    <!-- Anillos decorativos -->
+    <svg class="rings" viewBox="0 0 400 400" aria-hidden="true">
+      <circle class="r-outer" cx="200" cy="200" r="192" />
+      <circle class="r-ticks" cx="200" cy="200" r="172" />
+      <circle class="r-orbit" cx="200" cy="200" r="150" />
+      <circle class="r-inner" cx="200" cy="200" r="104" />
+      <circle class="r-core" cx="200" cy="200" r="96" />
+    </svg>
+
+    <!-- Nodos que giran -->
+    <div class="orbit" style="--rot: 0deg">
+      {orbita.map((it, i) => (
+        <button
+          type="button"
+          class="node"
+          style={`--a: ${(i * 360) / n}deg`}
+          data-i={i}
+          data-titol={it.titol}
+          data-text={it.text}
+          data-etiqueta={it.etiqueta}
+          aria-pressed={i === 0 ? 'true' : 'false'}
+          aria-label={`Mostrar: ${it.titol}`}
+        >
+          <span class="o-dot"></span>
+          <span class="nlabel mono">{it.etiqueta}</span>
+        </button>
+      ))}
+    </div>
+
+    <!-- Núcleo: muestra el contenido del nodo activo -->
+    <div class="core" aria-live="polite">
+      <p class="cmd mono">$ <span data-cmd>{primer.etiqueta}</span></p>
+      <p class="ctitle" data-title>{primer.titol}</p>
+      <p class="ctext mono" data-text-out>{primer.text}</p>
+    </div>
+  </div>
+  <p class="hint mono">// clica un node</p>
+</div>
+
+<script>
+  document.querySelectorAll<HTMLElement>('[data-orb]').forEach((orb) => {
+    const orbit = orb.querySelector<HTMLElement>('.orbit')!;
+    const nodes = [...orb.querySelectorAll<HTMLButtonElement>('.node')];
+    const core = orb.querySelector<HTMLElement>('.core')!;
+    const cmd = orb.querySelector<HTMLElement>('[data-cmd]')!;
+    const title = orb.querySelector<HTMLElement>('[data-title]')!;
+    const text = orb.querySelector<HTMLElement>('[data-text-out]')!;
+    const n = nodes.length;
+    let rot = 0;
+    let current = 0;
+
+    const select = (i: number) => {
+      if (i === current) return;
+      current = i;
+      // Gira por el camino más corto hasta dejar el nodo arriba
+      const target = -(i * 360) / n;
+      let delta = (((target - rot) % 360) + 540) % 360 - 180;
+      rot += delta;
+      orbit.style.setProperty('--rot', `${rot}deg`);
+
+      nodes.forEach((b, j) => b.setAttribute('aria-pressed', String(j === i)));
+
+      // Cambia el contenido del núcleo con un parpadeo
+      core.classList.remove('flick');
+      void core.offsetWidth;
+      core.classList.add('flick');
+      const b = nodes[i];
+      cmd.textContent = b.dataset.etiqueta ?? '';
+      title.textContent = b.dataset.titol ?? '';
+      text.textContent = b.dataset.text ?? '';
+    };
+
+    nodes.forEach((b, i) => b.addEventListener('click', () => select(i)));
+
+    // Flechas del teclado cuando el foco está en el orbe
+    orb.addEventListener('keydown', (e) => {
+      if (e.key === 'ArrowRight' || e.key === 'ArrowDown') {
+        e.preventDefault();
+        select((current + 1) % n);
+        nodes[current].focus();
+      }
+      if (e.key === 'ArrowLeft' || e.key === 'ArrowUp') {
+        e.preventDefault();
+        select((current - 1 + n) % n);
+        nodes[current].focus();
+      }
+    });
+  });
+</script>
+
+<style>
+  /* Permite animar el giro de forma suave */
+  @property --rot {
+    syntax: '<angle>';
+    inherits: true;
+    initial-value: 0deg;
+  }
+
+  .orb {
+    --size: min(400px, 82vw);
+    --R: calc(var(--size) * 0.375); /* radio de la órbita de nodos */
+    display: grid;
+    justify-items: center;
+    gap: 14px;
+  }
+
+  .o-stage {
+    position: relative;
+    width: var(--size);
+    aspect-ratio: 1;
+  }
+
+  /* ---------- Anillos ---------- */
+  .rings {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    overflow: visible;
+  }
+  .rings circle { fill: none; transform-origin: 200px 200px; }
+  .r-outer {
+    stroke: rgba(var(--accent-rgb), 0.25);
+    stroke-width: 1;
+    stroke-dasharray: 2 10;
+    animation: spin 60s linear infinite;
+  }
+  .r-ticks {
+    stroke: rgba(var(--accent-2-rgb), 0.35);
+    stroke-width: 6;
+    stroke-dasharray: 1 17;
+    animation: spin 90s linear infinite reverse;
+  }
+  .r-orbit {
+    stroke: rgba(var(--accent-rgb), 0.45);
+    stroke-width: 1.5;
+    filter: drop-shadow(0 0 6px rgba(var(--accent-rgb), 0.6));
+  }
+  .r-inner { stroke: rgba(var(--accent-rgb), 0.2); stroke-width: 1; stroke-dasharray: 6 6; }
+  .r-core {
+    fill: rgba(var(--bg-rgb), 0.85);
+    stroke: rgba(var(--accent-rgb), 0.55);
+    stroke-width: 1.5;
+  }
+  @keyframes spin { to { transform: rotate(360deg); } }
+
+  /* ---------- Nodos ---------- */
+  .orbit {
+    position: absolute;
+    inset: 0;
+    transition: --rot 1s cubic-bezier(0.75, 0, 0.2, 1);
+  }
+  .node {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    display: grid;
+    justify-items: center;
+    gap: 6px;
+    padding: 6px;
+    background: none;
+    border: 0;
+    color: var(--text-dim);
+    cursor: pointer;
+    /* Coloca el nodo en el anillo y mantiene el texto derecho */
+    transform:
+      translate(-50%, -50%)
+      rotate(calc(var(--a) + var(--rot)))
+      translateY(calc(var(--R) * -1))
+      rotate(calc((var(--a) + var(--rot)) * -1));
+  }
+  .o-dot {
+    width: 18px;
+    height: 18px;
+    border-radius: 50%;
+    background: var(--bg);
+    border: 2px solid var(--accent);
+    box-shadow: 0 0 10px rgba(var(--accent-rgb), 0.5);
+    transition: background 0.3s, border-color 0.3s, box-shadow 0.3s, transform 0.3s;
+  }
+  .nlabel {
+    font-size: 0.72rem;
+    letter-spacing: 0.06em;
+    padding: 1px 6px;
+    border-radius: 3px;
+    background: rgba(var(--bg-rgb), 0.8);
+    white-space: nowrap;
+    transition: color 0.3s;
+  }
+  .node:hover .o-dot { transform: scale(1.2); }
+  .node:hover .nlabel { color: var(--text); }
+  .node[aria-pressed='true'] .o-dot {
+    background: var(--accent-2);
+    border-color: var(--accent-2);
+    box-shadow: 0 0 18px rgba(var(--accent-2-rgb), 0.9);
+  }
+  .node[aria-pressed='true'] .nlabel { color: var(--accent-2); }
+
+  /* ---------- Núcleo ---------- */
+  .core {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    width: 44%;
+    transform: translate(-50%, -50%);
+    text-align: center;
+    display: grid;
+    gap: 4px;
+  }
+  .core p { margin: 0; }
+  .cmd { font-size: 0.72rem; color: var(--green); }
+  .ctitle {
+    font-family: var(--font-display);
+    font-size: 1rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--text);
+  }
+  .ctext {
+    font-size: 0.78rem;
+    line-height: 1.45;
+    color: var(--accent);
+    text-shadow: 0 0 8px rgba(var(--accent-rgb), 0.5);
+  }
+  .core.flick { animation: flicker 0.6s steps(1) both; }
+  @keyframes flicker {
+    0% { opacity: 1; } 10% { opacity: 0.2; } 20% { opacity: 1; }
+    35% { opacity: 0.4; } 50% { opacity: 1; } 75% { opacity: 0.6; } 85% { opacity: 1; }
+  }
+
+  .hint { margin: 0; font-size: 0.75rem; color: var(--text-faint); }
+
+  @media (max-width: 640px) {
+    .ctitle { font-size: 0.85rem; }
+    .ctext { font-size: 0.7rem; }
+    .nlabel { font-size: 0.66rem; }
+  }
+</style>

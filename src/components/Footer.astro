@@ -1,0 +1,44 @@
+---
+import { perfil } from '../data/perfil.js';
+const any = new Date().getFullYear();
+const xarxes = [
+  { nom: 'GitHub', url: perfil.github },
+  { nom: 'LinkedIn', url: perfil.linkedin },
+  { nom: 'Correu', url: perfil.email ? `mailto:${perfil.email}` : '' },
+].filter((x) => x.url);
+---
+
+<footer class="footer">
+  <div class="container footer-inner">
+    <div>
+      <p class="mono prompt"><span>arley@ipop</span>:~$ exit</p>
+      <p class="copy">© {any} {perfil.nom} · IPOP · {perfil.cicle}</p>
+    </div>
+    <div class="social">
+      {xarxes.map((x) => (
+        <a href={x.url} target="_blank" rel="noopener">{x.nom} ↗</a>
+      ))}
+    </div>
+  </div>
+</footer>
+
+<style>
+  .footer {
+    margin-top: 40px;
+    border-top: 1px solid var(--border);
+    padding: 32px 0 40px;
+  }
+  .footer-inner {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    align-items: center;
+    gap: 20px;
+  }
+  .prompt { margin: 0 0 4px; font-size: 0.85rem; color: var(--text-faint); }
+  .prompt span { color: var(--green); }
+  .copy { margin: 0; font-size: 0.85rem; color: var(--text-faint); }
+  .social { display: flex; gap: 20px; font-size: 0.9rem; }
+  .social a { color: var(--text-dim); }
+  .social a:hover { color: var(--accent); }
+</style>

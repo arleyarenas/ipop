@@ -1,0 +1,190 @@
+---
+import Layout from '../layouts/Layout.astro';
+import PageHeader from '../components/PageHeader.astro';
+import SectionTitle from '../components/SectionTitle.astro';
+import {
+  perfil,
+  competenciesTecniques,
+  competenciesTransversals,
+  singularitat,
+  experiencia,
+  formacio,
+  idiomes,
+  plaComunicacio,
+} from '../data/perfil.js';
+
+const base = import.meta.env.BASE_URL.replace(/\/$/, '');
+const nivells = ['', 'Inicial', 'Bàsic', 'Intermedi', 'Avançat', 'Expert'];
+---
+
+<Layout title="Currículum per competències">
+  <PageHeader
+    num="02"
+    kicker="Currículum per competències"
+    title='El que sé fer <span class="gradient-text">i com ho faig</span>'
+    intro="Les competències tècniques que he desenvolupat durant SMX i ASIX, les transversals que m'ha donat la feina i el que em fa diferent com a futur professional."
+  />
+
+  <!-- Competències tècniques -->
+  <section class="section">
+    <div class="container">
+      <SectionTitle title="Competències tècniques" sub="Nivell autoavaluat de l'1 al 5." />
+      <div class="grid grid-2">
+        {competenciesTecniques.map((a) => (
+          <div class="card reveal">
+            <div class="area-head">
+              <span class="icon">{a.icona}</span>
+              <h3>{a.area}</h3>
+            </div>
+            <ul class="skills">
+              {a.items.map((s) => (
+                <li>
+                  <div class="skill-row">
+                    <span>{s.nom}</span>
+                    <span class="mono lvl">{nivells[s.nivell]}</span>
+                  </div>
+                  <div class="bar"><span style={`width:${s.nivell * 20}%`}></span></div>
+                </li>
+              ))}
+            </ul>
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- Competències transversals -->
+  <section class="section">
+    <div class="container">
+      <SectionTitle title="Competències transversals" sub="Habilitats que no surten en cap manual, però que es noten cada dia." />
+      <div class="grid grid-3">
+        {competenciesTransversals.map((c) => (
+          <div class="card lift reveal">
+            <span class="icon">{c.icona}</span>
+            <h3>{c.nom}</h3>
+            <p>{c.desc}</p>
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- Què em fa singular -->
+  <section class="section">
+    <div class="container">
+      <div class="singular reveal">
+        <p class="mono label">// què em fa singular</p>
+        <div class="grid grid-3">
+          {singularitat.map((s, i) => (
+            <div class="sing-item">
+              <span class="mono sing-n">0{i + 1}</span>
+              <h3>{s.titol}</h3>
+              <p>{s.text}</p>
+            </div>
+          ))}
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Experiència i formació -->
+  <section class="section">
+    <div class="container grid grid-2 cols">
+      <div class="reveal">
+        <SectionTitle title="Experiència" />
+        <ol class="timeline">
+          {experiencia.map((e) => (
+            <li>
+              <span class="mono when">{e.periode}</span>
+              <h3>{e.titol}</h3>
+              <p class="where">{e.lloc}</p>
+              <p>{e.desc}</p>
+            </li>
+          ))}
+        </ol>
+      </div>
+      <div class="reveal">
+        <SectionTitle title="Formació" />
+        <ol class="timeline">
+          {formacio.map((f) => (
+            <li>
+              <span class="mono when">{f.periode}</span>
+              <h3>{f.titol}</h3>
+              <p class="where">{f.lloc}</p>
+            </li>
+          ))}
+        </ol>
+        <h3 class="idiomes-t">Idiomes</h3>
+        <div class="tags">
+          {idiomes.map((i) => <span class="tag">{i.nom} · {i.nivell}</span>)}
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Pla de comunicació -->
+  <section class="section">
+    <div class="container">
+      <SectionTitle title="Pla de comunicació" sub="Com dono a conèixer el meu perfil professional." />
+      <div class="grid grid-4">
+        {plaComunicacio.map((c) => (
+          <div class="card lift reveal">
+            <span class="icon">{c.icona}</span>
+            <h3>{c.canal}</h3>
+            <p>{c.accio}</p>
+          </div>
+        ))}
+      </div>
+      <div class="btn-row cta reveal">
+        <a href={`${base}/${perfil.cvPdf}`} class="btn btn-primary" download>Descarregar CV en PDF</a>
+        <a href={perfil.github} class="btn btn-ghost" target="_blank" rel="noopener">Veure GitHub ↗</a>
+      </div>
+    </div>
+  </section>
+</Layout>
+
+<style>
+  .area-head { display: flex; align-items: center; gap: 14px; margin-bottom: 18px; }
+  .area-head .icon { margin: 0; }
+  .area-head h3 { margin: 0; }
+  .skills { list-style: none; margin: 0; padding: 0; display: grid; gap: 16px; }
+  .skill-row { display: flex; justify-content: space-between; gap: 12px; font-size: 0.95rem; margin-bottom: 7px; }
+  .lvl { font-size: 0.75rem; color: var(--text-faint); white-space: nowrap; }
+  .bar { height: 6px; border-radius: 6px; background: var(--surface-2); overflow: hidden; }
+  .bar span { display: block; height: 100%; border-radius: 6px; background: var(--grad); }
+
+  .singular {
+    border-radius: var(--radius-lg);
+    padding: 44px;
+    border: 1px solid rgba(var(--accent-rgb), 0.3);
+    background:
+      radial-gradient(60% 100% at 0% 0%, rgba(var(--accent-rgb), 0.16), transparent 70%),
+      radial-gradient(50% 100% at 100% 100%, rgba(var(--accent-2-rgb), 0.1), transparent 70%),
+      var(--bg-2);
+  }
+  .label { color: var(--accent-2); font-size: 0.85rem; margin-bottom: 24px; }
+  .sing-n { font-size: 0.8rem; color: var(--accent); }
+  .sing-item h3 { margin-top: 8px; }
+
+  .cols { gap: 48px; }
+  .timeline { list-style: none; margin: 0; padding: 0 0 0 22px; border-left: 1px solid var(--border-strong); }
+  .timeline li { position: relative; padding-bottom: 28px; }
+  .timeline li::before {
+    content: '';
+    position: absolute;
+    left: -28px;
+    top: 6px;
+    width: 11px;
+    height: 11px;
+    border-radius: 50%;
+    background: var(--bg);
+    border: 2px solid var(--accent);
+  }
+  .when { font-size: 0.78rem; color: var(--accent-2); }
+  .timeline h3 { margin: 4px 0 2px; }
+  .where { color: var(--text); font-weight: 500; margin-bottom: 6px; }
+  .idiomes-t { margin-top: 8px; }
+  .cta { margin-top: 32px; }
+
+  @media (max-width: 640px) { .singular { padding: 28px 22px; } }
+</style>

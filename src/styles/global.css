@@ -1,0 +1,386 @@
+/* ============================================================
+   🎨 TEMA: "Ruïnes sota la pluja"
+   Ambientación: noche lluviosa, ruinas industriales, metal
+   oxidado, musgo y luces de neón tenues.
+
+   👉 TODO el color de la web sale de las variables de :root.
+      Cambia aquí y se actualiza cada página.
+      Las variables *-rgb son el mismo color en formato "R, G, B"
+      (se usan para transparencias: rgba(var(--accent-rgb), 0.3)).
+   ============================================================ */
+
+:root {
+  /* Fondo */
+  --bg: #06080a;
+  --bg-rgb: 6, 8, 10;
+  --bg-2: #0b1012;
+
+  /* Paneles */
+  --surface: rgba(150, 185, 175, 0.035);
+  --surface-2: rgba(150, 185, 175, 0.07);
+  --border: rgba(160, 190, 180, 0.09);
+  --border-strong: rgba(160, 190, 180, 0.2);
+
+  /* Texto */
+  --text: #d8e1db;
+  --text-dim: #8b9993;
+  --text-faint: #55625c;
+
+  /* Acentos */
+  --accent: #4fd1c5;          /* neón turquesa */
+  --accent-rgb: 79, 209, 197;
+  --accent-2: #e8b04b;        /* lámpara ámbar */
+  --accent-2-rgb: 232, 176, 75;
+  --green: #8fcf6a;           /* musgo */
+  --green-rgb: 143, 207, 106;
+  --amber: #d9822b;           /* óxido */
+  --amber-rgb: 217, 130, 43;
+  --danger: #c2412d;
+  --on-accent: #061010;       /* texto sobre botones de color */
+
+  --grad: linear-gradient(110deg, var(--accent) 0%, #a7d8a0 50%, var(--accent-2) 100%);
+
+  /* Tipografías */
+  --font-sans: 'Inter', system-ui, -apple-system, 'Segoe UI', sans-serif;
+  --font-display: 'Chakra Petch', var(--font-sans);
+  --font-mono: 'Share Tech Mono', ui-monospace, 'Cascadia Code', monospace;
+
+  /* Formas: esquinas cortas, aspecto industrial */
+  --radius: 6px;
+  --radius-sm: 4px;
+  --radius-lg: 10px;
+  --max: 1120px;
+  --nav-h: 68px;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+  -webkit-text-size-adjust: 100%;
+}
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--font-sans);
+  font-size: 16.5px;
+  line-height: 1.65;
+  -webkit-font-smoothing: antialiased;
+  overflow-x: hidden;
+}
+
+/* Líneas de escaneo muy sutiles, como una pantalla vieja */
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  z-index: 1;
+  pointer-events: none;
+  background: repeating-linear-gradient(0deg, rgba(255, 255, 255, 0.018) 0 1px, transparent 1px 3px);
+  mix-blend-mode: overlay;
+}
+
+main, .nav, .footer { position: relative; z-index: 2; }
+
+h1,
+h2,
+h3,
+h4 {
+  font-family: var(--font-display);
+  line-height: 1.1;
+  letter-spacing: 0.01em;
+  margin: 0 0 0.5em;
+  text-transform: uppercase;
+}
+
+h1 { font-size: clamp(2.3rem, 6vw, 4rem); font-weight: 700; }
+h2 { font-size: clamp(1.6rem, 3.4vw, 2.3rem); font-weight: 600; }
+h3 { font-size: 1.1rem; font-weight: 600; letter-spacing: 0.03em; }
+
+p { margin: 0 0 1em; color: var(--text-dim); }
+
+a {
+  color: var(--accent);
+  text-decoration: none;
+  transition: color 0.2s;
+}
+a:hover { color: var(--accent-2); }
+
+img { max-width: 100%; display: block; }
+
+::selection { background: rgba(var(--accent-rgb), 0.3); }
+
+:focus-visible {
+  outline: 2px solid var(--accent-2);
+  outline-offset: 3px;
+  border-radius: 4px;
+}
+
+/* ---------- Utilidades de maquetación ---------- */
+
+.container {
+  width: 100%;
+  max-width: var(--max);
+  margin: 0 auto;
+  padding: 0 24px;
+}
+
+.section { padding: 72px 0; }
+.section + .section { padding-top: 24px; }
+
+.grid {
+  display: grid;
+  gap: 20px;
+}
+.grid-2 { grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); }
+.grid-3 { grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); }
+.grid-4 { grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); }
+
+/* Texto con brillo de neón */
+.gradient-text {
+  background: var(--grad);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  filter: drop-shadow(0 0 18px rgba(var(--accent-rgb), 0.35));
+}
+
+.mono { font-family: var(--font-mono); }
+
+/* ---------- Paneles de metal envejecido ---------- */
+
+.card {
+  position: relative;
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.025), transparent 40%),
+    rgba(12, 18, 20, 0.72);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 26px;
+  backdrop-filter: blur(6px);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.03), 0 18px 40px -24px rgba(0, 0, 0, 0.9);
+  transition: border-color 0.25s, transform 0.25s, box-shadow 0.25s;
+}
+
+/* Esquinas tipo remache / soporte metálico */
+.card::before {
+  content: '';
+  position: absolute;
+  inset: -1px;
+  pointer-events: none;
+  border-radius: inherit;
+  background:
+    linear-gradient(var(--accent), var(--accent)) top left / 16px 2px no-repeat,
+    linear-gradient(var(--accent), var(--accent)) top left / 2px 16px no-repeat,
+    linear-gradient(var(--accent), var(--accent)) bottom right / 16px 2px no-repeat,
+    linear-gradient(var(--accent), var(--accent)) bottom right / 2px 16px no-repeat;
+  opacity: 0.35;
+  transition: opacity 0.25s;
+}
+.card:hover {
+  border-color: rgba(var(--accent-rgb), 0.35);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.04), 0 0 30px -10px rgba(var(--accent-rgb), 0.35);
+}
+.card:hover::before { opacity: 1; }
+.card.lift:hover { transform: translateY(-4px); }
+
+.card .icon {
+  font-size: 1.5rem;
+  width: 48px;
+  height: 48px;
+  display: grid;
+  place-items: center;
+  border-radius: var(--radius-sm);
+  background: rgba(var(--accent-rgb), 0.08);
+  border: 1px solid rgba(var(--accent-rgb), 0.25);
+  margin-bottom: 16px;
+}
+
+.card h3 { color: var(--text); }
+.card p:last-child { margin-bottom: 0; }
+
+/* ---------- Etiquetas y botones ---------- */
+
+.tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-family: var(--font-mono);
+  font-size: 0.8rem;
+  padding: 4px 10px;
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--border-strong);
+  color: var(--text-dim);
+  background: var(--surface);
+}
+.tags { display: flex; flex-wrap: wrap; gap: 8px; }
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 12px 22px;
+  border-radius: var(--radius-sm);
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: 0.92rem;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  border: 1px solid transparent;
+  transition: transform 0.2s, box-shadow 0.2s, background 0.2s, border-color 0.2s;
+  cursor: pointer;
+}
+.btn-primary {
+  background: var(--accent);
+  color: var(--on-accent);
+  box-shadow: 0 0 24px -6px rgba(var(--accent-rgb), 0.7);
+}
+.btn-primary:hover {
+  color: var(--on-accent);
+  transform: translateY(-2px);
+  box-shadow: 0 0 34px -4px rgba(var(--accent-rgb), 0.9);
+}
+.btn-ghost {
+  border-color: var(--border-strong);
+  color: var(--text);
+  background: rgba(12, 18, 20, 0.7);
+}
+.btn-ghost:hover { color: var(--accent-2); border-color: var(--accent-2); }
+
+.btn-row { display: flex; flex-wrap: wrap; gap: 12px; }
+
+/* ============================================================
+   🌧️ ATMÓSFERA (fondo fijo detrás de todo)
+   La estructura está en Layout.astro.
+   ============================================================ */
+
+.atmos {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  overflow: hidden;
+}
+
+/* Cielo: oscuridad con un resplandor turquesa lejano */
+.atmos .sky {
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(60% 45% at 70% 8%, rgba(var(--accent-rgb), 0.12), transparent 70%),
+    radial-gradient(40% 35% at 15% 20%, rgba(var(--accent-2-rgb), 0.06), transparent 70%),
+    linear-gradient(180deg, #091013 0%, var(--bg) 55%, #040506 100%);
+}
+
+/* Siluetas de ruinas industriales */
+.atmos .ruins {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  width: 100%;
+  height: 46vh;
+  min-height: 260px;
+}
+.atmos .ruins .far { fill: #0b1316; }
+.atmos .ruins .near { fill: #050809; }
+.atmos .ruins .lamp {
+  fill: var(--accent-2);
+  animation: flicker 6s infinite;
+}
+.atmos .ruins .lamp:nth-of-type(2n) { animation-delay: 2.3s; animation-duration: 8s; }
+.atmos .ruins .lamp:nth-of-type(3n) { fill: var(--accent); animation-delay: 4.1s; }
+
+@keyframes flicker {
+  0%, 100% { opacity: 0.85; }
+  45% { opacity: 0.85; }
+  47% { opacity: 0.15; }
+  49% { opacity: 0.8; }
+  52% { opacity: 0.25; }
+  55% { opacity: 0.85; }
+}
+
+/* Lluvia (canvas animado) */
+.atmos canvas {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+}
+
+/* Niebla baja */
+.atmos .fog {
+  position: absolute;
+  left: -10%;
+  right: -10%;
+  bottom: 0;
+  height: 40vh;
+  background: linear-gradient(0deg, rgba(120, 150, 145, 0.09), transparent);
+  filter: blur(30px);
+  animation: drift 26s ease-in-out infinite alternate;
+}
+@keyframes drift {
+  from { transform: translateX(-3%); }
+  to { transform: translateX(3%); }
+}
+
+/* Destello de relámpago */
+.atmos .flash {
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(80% 60% at 60% 0%, rgba(200, 230, 235, 0.18), transparent 70%);
+  opacity: 0;
+}
+.atmos .flash.on { animation: lightning 0.9s ease-out; }
+@keyframes lightning {
+  0% { opacity: 0; }
+  8% { opacity: 1; }
+  16% { opacity: 0.2; }
+  24% { opacity: 0.8; }
+  100% { opacity: 0; }
+}
+
+/* Barra superior de progreso de scroll ("cicle") */
+.cycle {
+  position: fixed;
+  top: 0;
+  left: 0;
+  height: 2px;
+  width: 0;
+  z-index: 60;
+  background: linear-gradient(90deg, var(--accent), var(--accent-2), var(--danger));
+  box-shadow: 0 0 10px rgba(var(--accent-2-rgb), 0.7);
+}
+
+/* ---------- Animación de entrada ---------- */
+
+.reveal {
+  opacity: 0;
+  transform: translateY(18px);
+  transition: opacity 0.7s ease, transform 0.7s ease;
+}
+.reveal.visible {
+  opacity: 1;
+  transform: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  .reveal { opacity: 1; transform: none; transition: none; }
+  * { animation: none !important; }
+}
+
+@media (max-width: 640px) {
+  body { font-size: 16px; }
+  .container { padding: 0 16px; }
+  .section { padding: 52px 0; }
+  .card { padding: 22px; }
+  .atmos .ruins { height: 34vh; }
+}
