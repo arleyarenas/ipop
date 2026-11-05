@@ -19,7 +19,7 @@ export const perfil = {
   github: 'https://github.com/arleyarenas',
   telegram: '',
   // Pon tu CV en la carpeta /public con este nombre
-  cvPdf: 'cv-arley-arenas.pdf',
+  cvPdf: 'Arley_Arenas_Saavedra.pdf',
   disponible: true, // muestra el indicador "Obert a pràctiques"
 };
 
